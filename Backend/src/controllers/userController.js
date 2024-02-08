@@ -1,9 +1,9 @@
-/* eslint-disable max-len */
-const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const joi = require('joi');
 const { randomBytes, scryptSync, timingSafeEqual } = require('crypto');
 const Models = require('../../models');
+const { where } = require('sequelize');
+const Op = require('sequelize').Op;
 
 function SaltAndHash(password) {
   const salt = randomBytes(16).toString('hex');
@@ -18,8 +18,8 @@ function VerifyPassword(password, hash, salt) {
   return auth;
 }
 
-class Controller {
-  async register(req, res) {
+class userController {
+  async Register(req, res) {
     const data = req.body;
     const schema = joi.object().keys({
       email: joi.string().email().required(),
@@ -33,8 +33,6 @@ class Controller {
       password: joi.string().pattern(/^[a-zA-Z0-9]{3,30}$/).required(),
     });
 
-    // const id = Math.ceil(Math.random() * 9999999);
-
     try {
       await schema.validateAsync(data);
     } catch (err) {
@@ -45,13 +43,42 @@ class Controller {
 
     try {
       const HashResult = SaltAndHash(data.password);
-
-      const registeredUser = await Models.User.create({ ...data, hash: HashResult.hashedPassword, salt: HashResult.salt });
-
-      const Token = jwt.sign(registeredUser.dataValues.id, process.env.SECRET_JWT, {
-        expiresIn: '5 days',
+      const [ registeredUser, created ] = await Models.User.findOrCreate({
+        where: {
+          [Op.or]: [{
+            username: data.username
+          }, {
+            email: data.email
+          }]
+        },
+        default: {
+          ...data, hash: HashResult.hashedPassword, salt: HashResult.salt
+        }
       });
 
+      if(!created) {
+        if(registeredUser.email == data.email) {
+          res.status(409).json({
+            status: 'error',
+            message: 'Email already in use',
+          })
+          return;
+        }
+
+        if(registeredUser.username == data.username) {
+          res.status(409).json({
+            status: 'error',
+            message: 'Username already in use',
+          })
+          return;
+        }
+        
+      }
+
+      const Token = jwt.sign({ id: registeredUser.dataValues.id }, process.env.SECRET_JWT, {
+        expiresIn: '5 days',
+      });
+      delete data.password;
       res.status(201).json({
         status: 'success',
         message: 'resource created',
@@ -66,7 +93,7 @@ class Controller {
     }
   }
 
-  async login(req, res) {
+  async Login(req, res) {
     const data = req.body;
     const schema = joi.object().keys({
       username: joi.string()
@@ -121,17 +148,17 @@ class Controller {
     }
   }
 
-  logout(req, res) {
+  Logout(req, res) {
     res.json({
       auth: false,
       token: null,
     });
   }
 
-  getCourses(req, res) {
+  GetCourses(req, res) {
     res.status(200).json({
       courses: ['foo', 'bar'],
     });
   }
 }
-module.exports = Controller;
+module.exports = userController;

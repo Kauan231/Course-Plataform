@@ -5,11 +5,11 @@ const authMiddleware = require('../middlewares/auth');
 const router = Router();
 const userController = new UserController();
 
-router.post('/register', (req, res) => { userController.register(req, res); });
-router.post('/logout', (req, res) => { userController.logout(req, res); });
-router.post('/login', (req, res) => { userController.login(req, res); });
+router.post('/register', (req, res) => { userController.Register(req, res); });
+router.post('/logout', (req, res) => { userController.Logout(req, res); });
+router.post('/login', (req, res) => { userController.Login(req, res); });
 
-router.get('/courses', authMiddleware, (req, res) => { userController.getCourses(req, res); });
+router.get('/courses', authMiddleware, (req, res) => { userController.GetCourses(req, res); });
 
 /*
 router.post('/courses', (req, res) => { userController.addCourse(req, res); });
