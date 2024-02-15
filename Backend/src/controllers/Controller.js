@@ -1,10 +1,7 @@
 const Models = require('../../models');
-const Op = require('sequelize').Op;
 
 class Controller {
-    constructor(Model, CreateSchema, ReadSchema) {
-        this.createSchema = CreateSchema;
-        this.readSchema = ReadSchema;
+    constructor(Model) {
         this.model = Model;
     }
 
@@ -35,7 +32,7 @@ class Controller {
         }
     }
 
-    async Read(req, res) {
+    async Read(req, res, args) {
         try {
             await this.Validate(req.query, this.readSchema);
         } catch (err) {
@@ -43,17 +40,54 @@ class Controller {
                 { ...err.details }[0].message.split('"').join(''),
             );
         }
-
+        
         try {
-            //const foundItem = await Models[this.model].Find({where: { title: { [Op.ilike]: req.body.title } } });
-            const foundItem = await Models[this.model].findOne({where: { title : req.query.title  } });
-            res.status(201).json({
-                status: 'success',
-                message: 'found',
-                data: { id: foundItem.dataValues.id, ...foundItem },
+            const foundItem = await Models[this.model].findAll({ where: { ...args } });
+            
+            if(foundItem.length > 0){
+                return res.status(201).json({
+                    status: 'success',
+                    message: 'found',
+                    data: {...foundItem },
+                });
+            }
+            
+            return res.status(404).json({
+                status: 'error',
+                message: 'resource not found'
             });
         } catch (err) {
-            console.log(err);
+            console.log(err); 
+            res.status(500).json({
+                ...err,
+            });
+        }
+    }
+    async Delete(req, res) {
+        try {
+            await this.Validate(req.body, this.deleteSchema);
+        } catch (err) {
+            return res.status(400).json(
+                { ...err.details }[0].message.split('"').join(''),
+            );
+        }
+
+        try {
+            const deletedItem = await Models[this.model].destroy({ where: { id: req.body.id } });
+            
+            if(deletedItem){
+                return res.status(204).json({
+                    status: 'success',
+                    message: 'Resource removed',
+                });
+            }
+            
+            return res.status(404).json({
+                status: 'error',
+                message: 'resource not found'
+            });
+        } catch (err) {
+            console.log(err); 
             res.status(500).json({
                 ...err,
             });

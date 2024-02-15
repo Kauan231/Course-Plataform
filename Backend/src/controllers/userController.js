@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const joi = require('joi');
 const { randomBytes, scryptSync, timingSafeEqual } = require('crypto');
 const Models = require('../../models');
-const { where } = require('sequelize');
 const Op = require('sequelize').Op;
 
 function SaltAndHash(password) {
@@ -36,13 +35,15 @@ class userController {
     try {
       await schema.validateAsync(data);
     } catch (err) {
-      res.status(400).json(
+      return res.status(400).json(
         { ...err.details }[0].message.split('"').join(''),
       );
     }
 
     try {
       const HashResult = SaltAndHash(data.password);
+      const userWithHash =  { ...req.body, hash: HashResult.hashedPassword, salt: HashResult.salt };
+      
       const [ registeredUser, created ] = await Models.User.findOrCreate({
         where: {
           [Op.or]: [{
@@ -51,35 +52,33 @@ class userController {
             email: data.email
           }]
         },
-        default: {
-          ...data, hash: HashResult.hashedPassword, salt: HashResult.salt
-        }
+        defaults: 
+          {
+            ...userWithHash
+          }
       });
 
       if(!created) {
         if(registeredUser.email == data.email) {
-          res.status(409).json({
+          return res.status(409).json({
             status: 'error',
             message: 'Email already in use',
           })
-          return;
         }
 
         if(registeredUser.username == data.username) {
-          res.status(409).json({
+          return res.status(409).json({
             status: 'error',
             message: 'Username already in use',
           })
-          return;
         }
-        
       }
 
       const Token = jwt.sign({ id: registeredUser.dataValues.id }, process.env.SECRET_JWT, {
         expiresIn: '5 days',
       });
       delete data.password;
-      res.status(201).json({
+      return res.status(201).json({
         status: 'success',
         message: 'resource created',
         data: { id: registeredUser.dataValues.id, ...data },
@@ -87,7 +86,7 @@ class userController {
         token: Token,
       });
     } catch (err) {
-      res.status(500).json({
+      return res.status(500).json({
         ...err,
       });
     }
@@ -125,7 +124,7 @@ class userController {
           expiresIn: '5 days',
         });
 
-        res.status(201).json({
+        return res.status(201).json({
           status: 'success',
           message: 'login successful',
           data: { id: user.dataValues.id },
@@ -133,14 +132,14 @@ class userController {
           token: Token,
         });
       } else {
-        res.status(400).json({
+        return res.status(400).json({
           status: 'error',
           message: 'incorrect password',
           auth: false,
         });
       }
     } catch (err) {
-      res.status(500).json({
+      return res.status(500).json({
         status: 'error',
         message: 'Cannot find user',
         auth: false,
@@ -149,15 +148,9 @@ class userController {
   }
 
   Logout(req, res) {
-    res.json({
+    return res.json({
       auth: false,
       token: null,
-    });
-  }
-
-  GetCourses(req, res) {
-    res.status(200).json({
-      courses: ['foo', 'bar'],
     });
   }
 }

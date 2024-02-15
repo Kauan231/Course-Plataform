@@ -11,10 +11,16 @@ const ReadSchema = joi.object().keys({
     title: joi.string().required()
 });
 
+const DeleteSchema = joi.object().keys({
+    id: joi.string().required()
+});
 
 class coursesController extends Controller {
     constructor() {
-        super('Course', CreateSchema, ReadSchema)
+        super('Course')
+        this.createSchema = CreateSchema;
+        this.readSchema = ReadSchema;
+        this.deleteSchema = DeleteSchema;
     }
 }
 

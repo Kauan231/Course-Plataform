@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         } )
         */
        Course.belongsToMany(models.User, {
-        through: 'Courses_Enroll',
+        through: 'Course_Enrolls',
        })
       }
     }
