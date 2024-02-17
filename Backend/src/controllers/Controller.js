@@ -1,3 +1,4 @@
+const Op = require('sequelize').Op;
 const Models = require('../../models');
 
 class Controller {
@@ -11,7 +12,7 @@ class Controller {
 
     async Create(req, res) {
         try {
-            await this.Validate(req.body, this.createSchema);
+            await this.Validate( req.body, this.createSchema);
         } catch (err) {
             return res.status(400).json(
                 { ...err.details }[0].message.split('"').join(''),
@@ -19,7 +20,7 @@ class Controller {
         }
     
         try {
-            const registeredItem = await Models[this.model].create({ ...req.body });
+            const registeredItem = await Models[this.model].create(req.body);
             return res.status(201).json({
                 status: 'success',
                 message: 'resource created',
@@ -32,9 +33,9 @@ class Controller {
         }
     }
 
-    async Read(req, res, args) {
+    async ReadByTitle(req, res) {
         try {
-            await this.Validate(req.query, this.readSchema);
+            await this.Validate(req.query, this.readByTitleSchema);
         } catch (err) {
             return res.status(400).json(
                 { ...err.details }[0].message.split('"').join(''),
@@ -42,7 +43,7 @@ class Controller {
         }
         
         try {
-            const foundItem = await Models[this.model].findAll({ where: { ...args } });
+            const foundItem = await Models[this.model].findAll({ where: { title: { [Op.like]: `${req.query.title}%` } } });
             
             if(foundItem.length > 0){
                 return res.status(201).json({
@@ -63,9 +64,43 @@ class Controller {
             });
         }
     }
+
+    async ReadById(req, res) {
+        try {
+            await this.Validate(req.params, this.readByIdSchema);
+        } catch (err) {
+            return res.status(400).json(
+                { ...err.details }[0].message.split('"').join(''),
+            );
+        }
+        
+        try {
+            const foundItem = await Models[this.model].findAll({ where: { id: req.params.id} });
+            
+            if(foundItem.length > 0){
+                return res.status(201).json({
+                    status: 'success',
+                    message: 'found',
+                    data: {...foundItem },
+                });
+            }
+            
+            return res.status(404).json({
+                status: 'error',
+                message: 'resource not found'
+            });
+        } catch (err) {
+            console.log(err); 
+            res.status(500).json({
+                ...err,
+            });
+        }
+    }
+    
+
     async Delete(req, res) {
         try {
-            await this.Validate(req.body, this.deleteSchema);
+            await this.Validate(req.params, this.deleteSchema);
         } catch (err) {
             return res.status(400).json(
                 { ...err.details }[0].message.split('"').join(''),
@@ -73,7 +108,7 @@ class Controller {
         }
 
         try {
-            const deletedItem = await Models[this.model].destroy({ where: { id: req.body.id } });
+            const deletedItem = await Models[this.model].destroy({ where: { id: req.params.id } });
             
             if(deletedItem){
                 return res.status(204).json({

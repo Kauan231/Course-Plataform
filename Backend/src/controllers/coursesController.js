@@ -7,8 +7,12 @@ const CreateSchema = joi.object().keys({
     categories: joi.string().required()
 });
 
-const ReadSchema = joi.object().keys({
+const ReadByTitleSchema = joi.object().keys({
     title: joi.string().required()
+});
+
+const ReadByIdSchema = joi.object().keys({
+    id: joi.string().required()
 });
 
 const DeleteSchema = joi.object().keys({
@@ -19,7 +23,8 @@ class coursesController extends Controller {
     constructor() {
         super('Course')
         this.createSchema = CreateSchema;
-        this.readSchema = ReadSchema;
+        this.readByTitleSchema = ReadByTitleSchema;
+        this.readByIdSchema = ReadByIdSchema;
         this.deleteSchema = DeleteSchema;
     }
 }
