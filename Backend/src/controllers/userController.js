@@ -106,7 +106,7 @@ class userController {
     try {
       await schema.validateAsync(data);
     } catch (err) {
-      res.status(400).json(
+      return res.status(400).json(
         { ...err.details }[0].message.split('"').join(''),
       );
     }

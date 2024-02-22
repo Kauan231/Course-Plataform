@@ -25,7 +25,7 @@ const Register = () => {
     return (
         <>
        
-            <div className="bg-slate-900 w-screen h-full grid">
+            <div className="bg-slate-900 w-screen h-screen grid">
                 <form onSubmit={ValidateData} >
                     <div className="p-20 w-full flex  justify-center items-center">
                         <div className="p-20 w-full h-auto rounded-md bg-gradient-to-t from-slate-900 to-blue-400 grid">

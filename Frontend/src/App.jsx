@@ -18,7 +18,7 @@ function App() {
       <Routes>
         <Route path="/login" Component={Login}/>
         <Route path="/register" Component={Register}/>
-        <Route path="/courses" Component={Courses}/>
+        <Route path="/" Component={Courses} exact/>
       </Routes>
     </BrowserRouter>
     

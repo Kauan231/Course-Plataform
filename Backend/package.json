@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Kauan231/Course-Platform#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.1",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^2.3.3",
