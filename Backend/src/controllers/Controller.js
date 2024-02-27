@@ -96,6 +96,30 @@ class Controller {
             });
         }
     }
+
+    async ReadAll(req, res) {
+        try {
+            const foundItem = await Models[this.model].findAll();
+            
+            if(foundItem.length > 0){
+                return res.status(201).json({
+                    status: 'success',
+                    message: 'found',
+                    data: {...foundItem },
+                });
+            }
+            
+            return res.status(404).json({
+                status: 'error',
+                message: 'resource not found'
+            });
+        } catch (err) {
+            console.log(err); 
+            res.status(500).json({
+                ...err,
+            });
+        }
+    }
     
 
     async Delete(req, res) {
