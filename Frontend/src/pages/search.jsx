@@ -3,14 +3,15 @@ import { useState, useEffect } from 'react';
 import { useLocation } from "react-router-dom";
 import Axios from 'axios';
 import Header from '../components/Header'
+import Loading from '../components/Loading'
 
-function Card ({Course, id}) {
+function Card ({course, id}) {
     return (
         <>
-        <a href={`/courses/${Course.id}/lessons`}>
+        <a href={`/courses/${course.id}/lessons`}>
             <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl'>
                 <h1 className='text-lg font-medium text-white'>
-                    {Course.title}
+                    {course.title}
                 </h1>
                 <h1 className='text-lg font-light text-white pt-2'>
                     Current Lesson
@@ -23,7 +24,7 @@ function Card ({Course, id}) {
  
 function ShowCards ({courses})  {
     const arrayOfCourses = courses.map( (course) => {
-        return <Card Course={course} key={course.id}/>
+        return <Card course={course} key={course.id}/>
     })
 
     return (
@@ -35,7 +36,7 @@ function ShowCards ({courses})  {
             {arrayOfCourses}
         </div>
             
-        </>
+        </> 
     );
 }
 
@@ -50,36 +51,56 @@ const Search = () => {
     if (!title) return window.location.replace("http://localhost:5173/");
 
     const [foundCourses, SetFoundCourses] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         Axios.get(`http://localhost:3000/courses/search?title=${title}`).then((res) => {
             SetFoundCourses(Object.values(res.data.data));
         }).catch((err) => {
             console.log(err);
-        });
+        }).finally(() => {
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 2000);
+        })
     }, [])
-
-    if(courses.length < 1 ) {
+    if(isLoading) {
         return (
-            <>
-            <div className="w-full h-auto p-5 grid justify-center items-center">    
-                <h1 className="text-3xl font-bold text-slate-500 "> Course not found </h1>
+            <> 
+            <Header/>
+            <div className='h-screen w-auto bg-slate-200'>
+                <div className='w-full grid grid-cols-1 p-20'>
+                    <Loading/>
+                </div>
             </div>
             </>
         )
-    } else {
+    }
+    if(foundCourses.length < 1 ) {
         return (
             <>
-                <Header/>
-                
-                <div className='h-screen w-auto bg-slate-200'>
-                    <div className='w-full grid grid-cols-1 p-20'>
-                        <ShowCards courses={foundCourses}/>
-                    </div>
-                </div>
+            <Header/>
+            <div className="w-full h-auto p-5 grid justify-center">    
+                <h1 className="text-3xl font-bold text-slate-500 mb-6"> Course not found </h1>
+                <a href="http://localhost:5173/"> 
+                    <h1 className="w-full h-full bg-black rounded-lg p-2 text-xl font-bold text-white text-center">Return</h1>
+                </a>
+            </div>
+            
             </>
         )
     }
+
+    return (
+        <>
+            <Header/>
+            <div className='h-screen w-auto bg-slate-200'>
+                <div className='w-full grid grid-cols-1 p-20'>
+                    <ShowCards courses={foundCourses}/>
+                </div>
+            </div>
+        </>
+    )
 }
 
 export default Search;

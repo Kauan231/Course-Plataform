@@ -3,6 +3,8 @@ import { object, string } from 'yup';
 import { useState, useEffect } from 'react';
 import Axios from 'axios';
 import Header from '../components/Header'
+import Loading from '../components/Loading'
+
 
 function Card ({Course}) {
     return (
@@ -32,6 +34,7 @@ function EnrolledCourses ({courses})  {
 const Dashboard = () => {
     const [Logged, SetLogged] = useState(0);
     const [courses, SetCourses] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     var match = document.cookie.match(new RegExp('(^| )' + "userid" + '=([^;]+)'));
     
@@ -44,49 +47,57 @@ const Dashboard = () => {
 
     useEffect(() => {
         Axios.get(`http://localhost:3000/user/${userid}/courses`).then((res) => {
-            let data = Object.values(res.data.data);
             SetLogged(1);
-            SetCourses(data);
+            SetCourses(Object.values(res.data.data));
         }).catch((err) => {
             console.log(err);
-        });
+        }).finally(() => {
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 2000);
+        })
     }, [])
 
-   if(!Logged) {
-        return (
-            <>
-            <h1>Not Logged</h1> 
-            </>
-        )
-   }
-   else if(courses.length < 1) {
-        return (
-            <>
-            <h1>Loading</h1> 
-            </>
-        )
-   }
-   else {
-        return (
-            <>
-                <Header/>
-                <div className='h-screen w-auto bg-slate-200'>
-                    <div className='w-full grid grid-cols-2 p-20'>
-                        <div className="w-full h-auto p-5">
-                            <h1 className='text-2xl font-bold text-slate-500'>
-                                Enrolled Courses
-                            </h1>
-                            <EnrolledCourses courses={courses} />
-                        </div>
-                        <div className='w-full h-auto border-2 border-black/70 p-5 bg-white'>
-                            <h1 className='text-2xl font-bold'> Access your lastest course: </h1>
-                        </div>
+    if(isLoading) return (
+        <> 
+            <Header/>
+            <div className='h-screen w-auto bg-slate-200'>
+                <div className='w-full grid grid-cols-2 p-20'>
+                    <div className="w-full h-auto p-5">
+                        <h1 className='text-2xl font-bold text-slate-500'>
+                            Enrolled Courses
+                        </h1>
+                        <Loading />
+                    </div>
+                    <div className='w-full h-auto border-2 border-black/70 p-5 bg-white'>
+                        <h1 className='text-2xl font-bold'> Access your lastest course: </h1>
+                        <Loading />
                     </div>
                 </div>
-            </>
-        )
-   }
+            </div>
+        </>
+    );
+
+    if(!Logged) return window.location.replace("http://localhost:5173/login");
     
+    return (
+        <>
+            <Header/>
+            <div className='h-screen w-auto bg-slate-200'>
+                <div className='w-full grid grid-cols-2 p-20'>
+                    <div className="w-full h-auto p-5">
+                        <h1 className='text-2xl font-bold text-slate-500'>
+                            Enrolled Courses
+                        </h1>
+                        <EnrolledCourses courses={courses} />
+                    </div>
+                    <div className='w-full h-auto border-2 border-black/70 p-5 bg-white'>
+                        <h1 className='text-2xl font-bold'> Access your lastest course: </h1>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
 }
 
 export default Dashboard;
