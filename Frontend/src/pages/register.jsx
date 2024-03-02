@@ -4,6 +4,9 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    const navigate = useNavigate();
+    const {isLogged, SetLogged} = useContext(EnrolledContext);
+
     const registerSchema = object({
         email: string().email().required(),
         password: string().required(),
@@ -33,7 +36,7 @@ const Register = () => {
                     console.log("sucess");
                     document.cookie = "token=" + res.data.token;
                     document.cookie = "userid=" + res.data.data.id;
-                    window.location.replace("http://localhost:5173/");
+                    SetLogged(true);
                 }  
             }
         ).catch((err) => {
@@ -41,10 +44,14 @@ const Register = () => {
         });
     }
 
+    useEffect(() => {
+        if(isLogged) navigate("/");
+    }, [isLogged])
+
 
     return (
         <>
-            <div className="bg-slate-900 w-full h-full grid">
+            <div className="bg-slate-900 w-full min-h-screen grid">
                     <Formik initialValues={initialValues} 
                                 validationSchema={registerSchema}
                                 onSubmit={ async (values, {resetForm } ) => {
@@ -57,7 +64,7 @@ const Register = () => {
                                 <div className="p-20 w-full h-auto rounded-md bg-gradient-to-t from-slate-900 to-blue-400 grid">
                                     <p className="text-3xl font-semibold flex justify-center items-center text-white">Get started : </p>
 
-                                    <div className="mt-5 grid grid-cols-2">
+                                    <div className="mt-5 grid grid-cols-2 gap-12">
                                         <div>
                                             <label className="text-xl flex justify-start text-white">First name:</label>
                                             <Field name="firstname" type="text" className="bg-slate-800 w-full p-2 round rounded-md flex justify-center items-center text-white" placeholder="First name"/>

@@ -1,12 +1,9 @@
-
-import { useState, useEffect } from 'react';
-import Axios from 'axios';
 import Loading from '../components/Loading'
 
 import { useContext } from 'react';
 import {EnrolledContext} from '../context/EnrolledContext'
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Card ({Course}) {
     return (
@@ -30,39 +27,9 @@ function EnrolledCourses ({courses})  {
 }
 
 const Dashboard = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const {isLogged, SetLogged, enrolledCourses, setEnrolledCourses} = useContext(EnrolledContext);
-    const navigate = useNavigate();
-
-    var matchid = document.cookie.match(new RegExp('(^| )' + "userid" + '=([^;]+)'));
-    var matchtoken = document.cookie.match(new RegExp('(^| )' + "token" + '=([^;]+)'));
-    if(!matchid || !matchtoken) return navigate("/login");
-    const userid = matchid[2]; 
-    const usertoken = matchtoken[2];
-
-    useEffect(() => {
-        Axios.get(`http://localhost:3000/user/${userid}/courses`, {
-            headers: {
-                'authorization' : usertoken
-            }
-        }).then((res) => {
-            SetLogged(true);
-            setEnrolledCourses(Object.values(res.data.data));
-        }).catch((err) => {
-            console.log(err);
-        }).finally(() => {
-            setTimeout(() => {
-                setIsLoading(false); // Debug
-            }, 2000);
-        })
-    }, [])
-    
-    useEffect(() => {
-        if(!isLogged && !isLoading) navigate("/login")
-    }, [isLoading, isLogged])
+    const {isLoading, enrolledCourses} = useContext(EnrolledContext);
     
     return (
-        <>
             <div className='h-screen w-auto bg-slate-200'>
                 <div className='w-full grid grid-cols-2 p-20'>
                     <div className="w-full h-auto p-5">
@@ -77,7 +44,6 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
-        </>
     )
 }
 

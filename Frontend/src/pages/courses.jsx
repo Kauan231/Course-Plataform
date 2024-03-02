@@ -33,9 +33,7 @@ const Courses = () => {
         }).catch((err) => {
             console.log(err);
         }).finally(() => {
-            setTimeout(() => {
-                setIsLoading(false); // Debug
-            }, 2000);
+            setIsLoading(false);
         });
     }, [])
 

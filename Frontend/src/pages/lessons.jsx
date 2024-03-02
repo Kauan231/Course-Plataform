@@ -10,7 +10,14 @@ const Lessons = () => {
     const [lessons, SetLessons] = useState([]);
     const [CourseName, SetCourseName] = useState("");
     const [isLoading, setIsLoading] = useState(true);
-    const [currentVideo, SetCurrentVideo] = useState("");
+    const [currentVideo, SetCurrentVideo] = useState({
+        "title": null,
+        "video": null,
+        "description": null,
+        "courseid": null,
+        "createdAt": null,
+        "updatedAt": null,
+    });
     
     useEffect(() => {
         Axios.get(`http://localhost:3000/courses/${courseid}/lessons`).then((res) => {
@@ -19,9 +26,7 @@ const Lessons = () => {
         }).catch((err) => { 
             console.log(err);
         }).finally(() => {
-            setTimeout(() => {
-                setIsLoading(false); // Debug
-            }, 2000);
+            setIsLoading(false);
         })
     }, [])
 
@@ -30,10 +35,11 @@ const Lessons = () => {
         console.log(storedArray);
         if(lessons.length > 0) {
             if(storedArray) {
-                SetCurrentVideo(lessons.find((element) => element.id == storedArray).video );
+                SetCurrentVideo(lessons.find((element) => element.id == storedArray) );
             }
             else{
-                SetCurrentVideo(lessons[0].video);
+                
+                SetCurrentVideo(lessons[0]);
             }
         }
     }, [lessons])
@@ -43,7 +49,7 @@ const Lessons = () => {
             <button onClick={ () => {
                 localStorage.setItem(`course:${courseid}`,`${lesson.id}`); 
                 SetCurrentVideo(lesson.video); }}>
-                <div className={`${currentVideo == lesson.video ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl`}>
+                <div className={`${currentVideo == lesson ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl`}>
                     <h1 className='text-lg font-medium text-white'>
                         {lesson.title}
                     </h1>
@@ -86,7 +92,7 @@ const Lessons = () => {
                     
                 </div>
                 <div className="w-full h-full col-span-3 p-5 bg-black">
-                    { isLoading ? <Loading /> : <ReactPlayer url={currentVideo} className="w-1/2 h-full" width='100%'height='100%' /> }
+                    { isLoading ? <Loading /> : <ReactPlayer url={currentVideo.video} className="w-1/2 h-full" width='100%'height='100%' /> }
                 </div>
             </div>
         </div>

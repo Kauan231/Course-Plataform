@@ -51,9 +51,7 @@ const Search = () => {
         }).catch((err) => {
             console.log(err);
         }).finally(() => {
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 2000);
+            setIsLoading(false);
         })
     }, [])
     

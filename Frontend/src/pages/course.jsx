@@ -13,7 +13,14 @@ const Course = () => {
     const [CourseDescription, SetCourseDescription] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
+
     const {enrolledCourses, setEnrolledCourses} = useContext(EnrolledContext);
+
+    var matchid = document.cookie.match(new RegExp('(^| )' + "userid" + '=([^;]+)'));
+    var matchtoken = document.cookie.match(new RegExp('(^| )' + "token" + '=([^;]+)'));
+    if(!matchid || !matchtoken) return navigate("/login");
+    const userId = matchid[2]; 
+    const userToken = matchtoken[2];
     
     useEffect(() => {
         Axios.get(`http://localhost:3000/courses/${courseid}/lessons`).then((res) => {
@@ -23,9 +30,7 @@ const Course = () => {
         }).catch((err) => { 
             console.log(err);
         }).finally(() => {
-            setTimeout(() => {
-                setIsLoading(false); // Debug
-            }, 2000);
+            setIsLoading(false);
         })
     }, [])
 
@@ -33,8 +38,7 @@ const Course = () => {
         return (
             <button onClick={() => {
                 localStorage.setItem(`course:${courseid}`,`${lesson.id}`);
-                //return window.location.replace(`http://localhost:5173/courses/${courseid}/lessons`);
-                navigate(`${courseid}/lessons`);
+                navigate(`lessons`);
             }}>
                 <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl'>
                     <h1 className='text-lg font-medium text-white'>
@@ -58,16 +62,58 @@ const Course = () => {
         )
     }
 
+    function UpdateCourses() {
+        Axios.get(`http://localhost:3000/user/${userId}/courses`, {
+            headers: {
+                'authorization' : userToken
+            }
+        }).then((res) => {
+            setEnrolledCourses(Object.values(res.data.data));
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
+    function UnenrollReq() {
+        Axios.delete(`http://localhost:3000/user/${userId}/enroll/${courseid}`, {
+            headers: {
+                'authorization' : userToken
+            }
+        }).then((res) => {
+            UpdateCourses();
+        }).catch((err) => { 
+            console.log(err);
+        })
+    }
+
+    function EnrollReq() {
+        console.log(userToken);
+        Axios.post(`http://localhost:3000/user/enroll`, {
+            "userid": userId,
+            "courseid": courseid,
+        },
+        {
+            headers: {
+                'authorization' : userToken
+            },
+        }).then((res) => {
+            UpdateCourses();
+        }).catch((err) => { 
+            console.log(err);
+        })
+    }
+
     function Unenroll(){
+        console.log(userToken);
         return (
-        <button className="w-1/6 mt-2 ml-24 mb-2 p-2 rounded-xl bg-white text-lg font-bold" type="submit">
+        <button className="w-1/6 mt-2 ml-24 mb-2 p-2 rounded-xl bg-white text-lg font-bold" onClick={UnenrollReq}>
                 Unenroll
         </button >
         )
     }
     function Enroll(){
         return (
-        <button className="w-1/6 mt-2 ml-24 mb-2 p-2 rounded-xl bg-white text-lg font-bold" type="submit">
+        <button className="w-1/6 mt-2 ml-24 mb-2 p-2 rounded-xl bg-white text-lg font-bold" onClick={EnrollReq}>
                 Enroll
         </button >
         )

@@ -23,8 +23,6 @@ const Header = () => {
 
     const {SetLogged} = useContext(EnrolledContext);
 
-    const renderError = (message) => <p className="text-gray-300 pt-2 font-semibold">{message}</p>
-
     const SearchBar = () => {
         const navigate = useNavigate();
 
@@ -46,7 +44,6 @@ const Header = () => {
                         }} >
                     <Form>
                         <Field className="w-full p-2 rounded-2xl " name="course" type="text" placeholder="Course name"></Field>
-                        <ErrorMessage name="course" render={renderError} />
                     </Form>
                 </Formik>
                 <IoCloseCircle className="ml-5 h-12 w-auto color-white text-white" onClick={ () => {

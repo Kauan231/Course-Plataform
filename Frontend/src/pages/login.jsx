@@ -2,9 +2,14 @@
 import { object, string } from 'yup';
 import  Axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useContext } from 'react';
+import {EnrolledContext} from '../context/EnrolledContext'
 
 const Login = () => {
+    const {isLogged, SetLogged} = useContext(EnrolledContext);
+    const navigate = useNavigate();
+
     const loginSchema = object({
         email: string().email().required(),
         password: string().required()
@@ -28,7 +33,7 @@ const Login = () => {
                     console.log("sucess");
                     document.cookie = "token=" + res.data.token;
                     document.cookie = "userid=" + res.data.data.id;
-                    window.location.replace("http://localhost:5173/");
+                    SetLogged(true);
                 }  
             }
         ).catch((err) => {
@@ -36,8 +41,12 @@ const Login = () => {
         });
     }
 
+    useEffect(() => {
+        if(isLogged) navigate("/");
+    }, [isLogged])
+
     return (
-            <div className="bg-slate-900 w-full h-screen grid-cols-2 grid">
+            <div className="bg-slate-900 w-full min-h-screen grid-cols-2 grid">
                 <Formik initialValues={initialValues} 
                         validationSchema={loginSchema}
                         onSubmit={ async (values, {resetForm } ) => {
@@ -46,7 +55,7 @@ const Login = () => {
                         }}         
                 >
                     <Form>
-                        <div className="p-20 w-full flex  justify-center items-center">
+                        <div className="p-20 w-full flex justify-center items-center">
                             <div className="p-20 w-full h-auto rounded-md bg-gradient-to-t from-slate-900 to-blue-400 grid">
                                 <p className="text-2xl font-semibold flex justify-center items-center text-white">Already Registered?</p>
                                 
@@ -72,7 +81,7 @@ const Login = () => {
                     </Form>
                 </Formik>
 
-                <div className="w-full h-full pt-20">
+                <div className="w-full pt-20">
                         <h1 className=" text-white text-3xl w-full justify-center items-center">Check our courses:</h1> 
                         
                         <div className="flex w-full gap-3 pt-5 pb-5 ">
