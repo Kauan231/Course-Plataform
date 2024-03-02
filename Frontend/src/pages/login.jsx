@@ -1,13 +1,10 @@
 
 import { object, string } from 'yup';
-import { useState } from 'react';
 import  Axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Link } from 'react-router-dom';
 
 const Login = () => {
-    const [email, SetEmail] = useState('');
-    const [password, SetPassword] = useState('');
-
     const loginSchema = object({
         email: string().email().required(),
         password: string().required()
@@ -21,43 +18,32 @@ const Login = () => {
     const renderError = (message) => <p className="text-gray-300 pt-2 font-semibold">{message}</p>
 
     async function ValidateData(values) {
-        let user;
-        try {
-            Axios.post('http://localhost:3000/login', {
-                "email" : values.email,
-                "password": values.password
-            }).then(
-                (res) => {
-                    console.log(res);
-                    if(res.status == "201") {
-                        console.log("sucess");
-                        document.cookie = "token=" + res.data.token;
-                        document.cookie = "userid=" + res.data.data.id;
-                        window.location.replace("http://localhost:5173/");
-                    }
-                     
-                }
-            )
-            
-        } catch (err) {
-            console.log(err)            
-            console.log("falhou")            
-        }
+        Axios.post('http://localhost:3000/login', {
+            "email" : values.email,
+            "password": values.password
+        }).then(
+            (res) => {
+                console.log(res);
+                if(res.status == "201") {
+                    console.log("sucess");
+                    document.cookie = "token=" + res.data.token;
+                    document.cookie = "userid=" + res.data.data.id;
+                    window.location.replace("http://localhost:5173/");
+                }  
+            }
+        ).catch((err) => {
+            console.log(err);              
+        });
     }
 
     return (
-        <>
-       
-            <div className="bg-slate-900 w-screen h-full grid-cols-2 grid">
+            <div className="bg-slate-900 w-full h-screen grid-cols-2 grid">
                 <Formik initialValues={initialValues} 
                         validationSchema={loginSchema}
                         onSubmit={ async (values, {resetForm } ) => {
-                            console.log(values);
                             await ValidateData(values);
                             resetForm();
-                        }}
-                        
-                        
+                        }}         
                 >
                     <Form>
                         <div className="p-20 w-full flex  justify-center items-center">
@@ -80,7 +66,7 @@ const Login = () => {
                                     Login
                                 </button >
                                 <a className="text-white flex mt-5 justify-center items-center">Forgot your password?</a>
-                                <a href='/register' className="text-white flex mt-2 justify-center items-center">Don't have an account? - Sign up</a>
+                                <Link to='/register' className="text-white flex mt-2 justify-center items-center">Don't have an account? - Sign up</Link>
                             </div>
                         </div>
                     </Form>
@@ -89,14 +75,13 @@ const Login = () => {
                 <div className="w-full h-full pt-20">
                         <h1 className=" text-white text-3xl w-full justify-center items-center">Check our courses:</h1> 
                         
-                        <div className="flex inline w-full gap-3 pt-5 pb-5 ">
+                        <div className="flex w-full gap-3 pt-5 pb-5 ">
                             <div className="bg-slate-800 w-52 mb-auto h-52 border-2 border-slate-700">
                                 <h1 className="text-white flex pt-2 justify-center items-center text-lg"> Course Name</h1>
                             </div>
                         </div>
-                    </div>
+                </div>
             </div>
-        </>
     )
 }
 

@@ -1,14 +1,12 @@
 import React from "react";
 import { useState, useEffect } from 'react';
-import { useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Axios from 'axios';
-import Header from '../components/Header'
 import Loading from '../components/Loading'
 
-function Card ({course, id}) {
+function Card ({course}) {
     return (
-        <>
-        <a href={`/courses/${course.id}/lessons`}>
+        <Link to={`/courses/${course.id}`}>
             <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl'>
                 <h1 className='text-lg font-medium text-white'>
                     {course.title}
@@ -17,26 +15,18 @@ function Card ({course, id}) {
                     Current Lesson
                 </h1>
             </div>
-        </a>
-        </>
+        </Link>
     )
 }
  
 function ShowCards ({courses})  {
-    const arrayOfCourses = courses.map( (course) => {
-        return <Card course={course} key={course.id}/>
-    })
-
     return (
-        <>
         <div className="w-full h-auto p-5">    
             <h1 className='text-2xl font-bold text-slate-500'>
                     Courses Found
             </h1>
-            {arrayOfCourses}
+            {courses.map( (course) => { return <Card course={course} key={course.id}/> })}
         </div>
-            
-        </> 
     );
 }
 
@@ -45,10 +35,12 @@ function useQuery() {
 }
 
 const Search = () => {
+    const navigate = useNavigate();
+
     const query = useQuery();
-    if (!query) return window.location.replace("http://localhost:5173/");
+    if (!query) navigate('/');
     const title = query.get("title");
-    if (!title) return window.location.replace("http://localhost:5173/");
+    if (!title) navigate('/');
 
     const [foundCourses, SetFoundCourses] = useState("");
     const [isLoading, setIsLoading] = useState(true);
@@ -64,42 +56,27 @@ const Search = () => {
             }, 2000);
         })
     }, [])
-    if(isLoading) {
+    
+    const NotFound = () => {
         return (
-            <> 
-            <Header/>
-            <div className='h-screen w-auto bg-slate-200'>
-                <div className='w-full grid grid-cols-1 p-20'>
-                    <Loading/>
-                </div>
-            </div>
-            </>
-        )
-    }
-    if(foundCourses.length < 1 ) {
-        return (
-            <>
-            <Header/>
             <div className="w-full h-auto p-5 grid justify-center">    
                 <h1 className="text-3xl font-bold text-slate-500 mb-6"> Course not found </h1>
-                <a href="http://localhost:5173/"> 
+                <Link to="/"> 
                     <h1 className="w-full h-full bg-black rounded-lg p-2 text-xl font-bold text-white text-center">Return</h1>
-                </a>
+                </Link>
             </div>
-            
-            </>
         )
     }
 
     return (
-        <>
-            <Header/>
-            <div className='h-screen w-auto bg-slate-200'>
-                <div className='w-full grid grid-cols-1 p-20'>
-                    <ShowCards courses={foundCourses}/>
-                </div>
+        <div className='h-screen w-auto bg-slate-200'>
+            <div className='w-full grid grid-cols-1 p-20'>  
+                {isLoading ? <Loading/> : 
+                (
+                    foundCourses.length > 0 ? <ShowCards courses={foundCourses}/> : <NotFound/> 
+                )}
             </div>
-        </>
+        </div>
     )
 }
 

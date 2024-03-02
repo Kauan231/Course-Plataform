@@ -84,6 +84,7 @@ class lessonController extends Controller {
                     message: 'found',
                     data: {...foundLessons },
                     coursename: foundCourse.title,
+                    description: foundCourse.description,
                 });
             }
             
