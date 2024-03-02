@@ -15,7 +15,7 @@ router.post('/login', (req, res) => { userController.Login(req, res); });
 router.use('/user', authMiddleware);
 
 router.post('/user/enroll', (req, res) => { enrollController.Create(req, res); });
-router.delete('/user/enroll', (req, res) => { enrollController.Delete(req, res); });
+router.delete('/user/:userid/enroll/:courseid', (req, res) => { enrollController.Delete(req, res); });
 router.get('/user/:userid/courses', (req, res) => { enrollController.Read(req, res); });
 
 module.exports = router;

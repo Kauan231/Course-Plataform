@@ -61,7 +61,7 @@ class enrollController extends Controller {
 
     async Delete(req, res) {
         try {
-            await this.Validate(req.body, this.deleteSchema);
+            await this.Validate(req.params, this.deleteSchema);
         } catch (err) {
             return res.status(400).json(
                 { ...err.details }[0].message.split('"').join(''),
@@ -70,7 +70,7 @@ class enrollController extends Controller {
 
         try {
             const foundItem = await Models[this.model].destroy({
-                where: { userid: req.body.userid, courseid: req.body.courseid }
+                where: { userid: req.params.userid, courseid: req.params.courseid }
             })
             
             if(foundItem) {
