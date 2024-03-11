@@ -12,6 +12,7 @@ describe('Enroll', () => {
     })
 
     let userId;
+    let userToken;
 
     describe('Creating Variables', () => {
         test('Create User', async () => {
@@ -28,6 +29,7 @@ describe('Enroll', () => {
             .expect(201)
     
             userId = response.body.data.id;
+            userToken = response.body.token;
         })
     })
     
@@ -120,8 +122,10 @@ describe('Enroll', () => {
     describe('Clearing', () => {
         test('Delete created user', async () => {
             const userToSend = userId.toString();
+            const userTokenSend = userToken.toString();
             const response = await request(app)
             .delete(`/user/${userToSend}`)
+            .set('authorization', userTokenSend)
             .expect(204);
         }) 
     })

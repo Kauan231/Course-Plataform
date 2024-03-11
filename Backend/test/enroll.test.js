@@ -54,9 +54,11 @@ describe('Enroll', () => {
             console.debug(typeof courseId);
 
             const userToSend = userId.toString();
+            const userTokenSend = userToken.toString();
             const courseToSend = courseId.toString();
             const response = await request(app)
             .post("/user/enroll")
+            .set('authorization', userTokenSend)
             .send(
                 {
                     "userid": userToSend,
@@ -69,8 +71,10 @@ describe('Enroll', () => {
         
         test('Enroll in a non existent course', async () => {
             const userToSend = userId.toString();
+            const userTokenSend = userToken.toString();
             const response = await request(app)
             .post("/user/enroll")
+            .set('authorization', userTokenSend)
             .send(
                 {
                     "userid": userToSend,
@@ -85,8 +89,10 @@ describe('Enroll', () => {
     describe('Clearing', () => {
         test('Delete created user', async () => {
             const userToSend = userId.toString();
+            const userTokenSend = userToken.toString();
             const response = await request(app)
             .delete(`/user/${userToSend}`)
+            .set('authorization', userTokenSend)
             .expect(204);
         }) 
     
