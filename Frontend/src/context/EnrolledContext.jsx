@@ -11,7 +11,7 @@ export const EnrolledProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!isLogged || enrolledCourses.length < 1) {
+    if(!isLogged) {
       var matchid = document.cookie.match(new RegExp('(^| )' + "userid" + '=([^;]+)'));
       var matchtoken = document.cookie.match(new RegExp('(^| )' + "token" + '=([^;]+)'));
       if(!matchid || !matchtoken) return navigate("/login");
@@ -37,7 +37,7 @@ export const EnrolledProvider = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    if(!isLogged || enrolledCourses.length < 1) {
+    if(!isLogged) {
       var matchid = document.cookie.match(new RegExp('(^| )' + "userid" + '=([^;]+)'));
       var matchtoken = document.cookie.match(new RegExp('(^| )' + "token" + '=([^;]+)'));
       if(!matchid || !matchtoken) return navigate("/login");
