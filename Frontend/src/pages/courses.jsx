@@ -28,7 +28,7 @@ const Courses = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        Axios.get(`http://localhost:3000/courses`).then((res) => {
+        Axios.get(`${import.meta.env.VITE_API_ADDRESS}/courses`).then((res) => {
             SetCourses(Object.values(res.data.data));
         }).catch((err) => {
             console.log(err);

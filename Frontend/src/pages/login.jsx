@@ -23,7 +23,7 @@ const Login = () => {
     const renderError = (message) => <p className="text-gray-300 pt-2 font-semibold">{message}</p>
 
     async function ValidateData(values) {
-        Axios.post('http://localhost:3000/login', {
+        Axios.post(`${import.meta.env.VITE_API_ADDRESS}/login`, {
             "email" : values.email,
             "password": values.password
         }).then(

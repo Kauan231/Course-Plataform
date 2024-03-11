@@ -20,7 +20,7 @@ const Lessons = () => {
     });
     
     useEffect(() => {
-        Axios.get(`http://localhost:3000/courses/${courseid}/lessons`).then((res) => {
+        Axios.get(`${import.meta.env.VITE_API_ADDRESS}/courses/${courseid}/lessons`).then((res) => {
             SetLessons(Object.values(res.data.data));
             SetCourseName(Object.values(res.data.coursename));
         }).catch((err) => { 
@@ -78,6 +78,8 @@ const Lessons = () => {
             </div>
         )
     }
+
+    localStorage.setItem(`latestcourse`,`${CourseName}`);
 
     return (
         <div className='h-screen w-auto bg-slate-200'>

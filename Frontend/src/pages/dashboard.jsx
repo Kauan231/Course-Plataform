@@ -1,6 +1,6 @@
 import Loading from '../components/Loading'
 
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {EnrolledContext} from '../context/EnrolledContext'
 
 import { Link } from "react-router-dom";
@@ -26,21 +26,40 @@ function EnrolledCourses ({courses})  {
     })
 }
 
+
 const Dashboard = () => {
-    const {isLoading, enrolledCourses} = useContext(EnrolledContext);
+    const { enrolledCourses} = useContext(EnrolledContext);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        setIsLoading(false);
+    }, [enrolledCourses])
+
+    var storedCourse = localStorage.getItem(`latestcourse`);
+    var storedCourseId = localStorage.getItem(`latestcourseid`);
+    
     
     return (
             <div className='h-screen w-auto bg-slate-200'>
-                <div className='w-full grid grid-cols-2 p-20'>
+                <div className='w-full h-full grid grid-cols-2 p-20'>
                     <div className="w-full h-auto p-5">
                         <h1 className='text-2xl font-bold text-slate-500'>
                             Enrolled Courses
                         </h1>
                         {isLoading ? <Loading /> : <EnrolledCourses courses={enrolledCourses} />}
                     </div>
-                    <div className='w-full h-auto border-2 border-black/70 p-5 bg-white'>
-                        <h1 className='text-2xl font-bold'> Access your lastest course: </h1>
-                        {isLoading && <Loading /> }
+                    <div className=' w-full h-40 border-2 border-black/70 p-5 bg-white'>
+                        
+                        {isLoading ? <Loading /> :
+                        <div className='w-full h-full bg-white flex flex-wrap justify-center '>
+                            <h1 className='text-2xl font-bold w-full'> Access your lastest course: </h1>
+                            <Link to={`/courses/${storedCourseId}`} className='p-2 rounded-xl text-xl w-1/2 bg-slate-300 border-2 border-black/40 items-center justify-center flex'>
+                                <h1 className='text-2xl font-semibold'>{storedCourse}</h1>
+                            </Link>
+                            
+                        </div>
+                        
+                        }
                     </div>
                 </div>
             </div>

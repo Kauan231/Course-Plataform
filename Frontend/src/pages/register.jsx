@@ -2,6 +2,8 @@ import { object, string } from 'yup';
 import  Axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useContext } from 'react';
+import {EnrolledContext} from '../context/EnrolledContext'
 
 const Register = () => {
     const navigate = useNavigate();
@@ -23,7 +25,7 @@ const Register = () => {
     const renderError = (message) => <p className="text-gray-300 pt-2 font-semibold">{message}</p>
 
     async function ValidateData(values) {
-        Axios.post('http://localhost:3000/register', {
+        Axios.post(`${import.meta.env.VITE_API_ADDRESS}/register`, {
             "email" : values.email,
             "password": values.password,
             "firstname": values.firstname,

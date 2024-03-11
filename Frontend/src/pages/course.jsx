@@ -3,7 +3,6 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import Loading from '../components/Loading';
-
 import {EnrolledContext} from '../context/EnrolledContext'
 
 const Course = () => {
@@ -23,7 +22,7 @@ const Course = () => {
     const userToken = matchtoken[2];
     
     useEffect(() => {
-        Axios.get(`http://localhost:3000/courses/${courseid}/lessons`).then((res) => {
+        Axios.get(`${import.meta.env.VITE_API_ADDRESS}/courses/${courseid}/lessons`).then((res) => {
             SetLessons(Object.values(res.data.data));
             SetCourseName(res.data.coursename);
             SetCourseDescription(res.data.description)
@@ -63,7 +62,7 @@ const Course = () => {
     }
 
     function UpdateCourses() {
-        Axios.get(`http://localhost:3000/user/${userId}/courses`, {
+        Axios.get(`${import.meta.env.VITE_API_ADDRESS}/user/${userId}/courses`, {
             headers: {
                 'authorization' : userToken
             }
@@ -75,7 +74,7 @@ const Course = () => {
     }
 
     function UnenrollReq() {
-        Axios.delete(`http://localhost:3000/user/${userId}/enroll/${courseid}`, {
+        Axios.delete(`${import.meta.env.VITE_API_ADDRESS}/${userId}/enroll/${courseid}`, {
             headers: {
                 'authorization' : userToken
             }
@@ -88,7 +87,7 @@ const Course = () => {
 
     function EnrollReq() {
         console.log(userToken);
-        Axios.post(`http://localhost:3000/user/enroll`, {
+        Axios.post(`${import.meta.env.VITE_API_ADDRESS}/user/enroll`, {
             "userid": userId,
             "courseid": courseid,
         },
@@ -137,6 +136,9 @@ const Course = () => {
             </div>
         )
     }
+    
+    localStorage.setItem(`latestcourse`,`${CourseName}`);
+    localStorage.setItem(`latestcourseid`,`${courseid}`);
 
     return (
         <div className='h-screen w-auto bg-slate-200'>

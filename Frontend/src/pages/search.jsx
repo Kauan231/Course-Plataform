@@ -46,7 +46,7 @@ const Search = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        Axios.get(`http://localhost:3000/courses/search?title=${title}`).then((res) => {
+        Axios.get(`${import.meta.env.VITE_API_ADDRESS}/courses/search?title=${title}`).then((res) => {
             SetFoundCourses(Object.values(res.data.data));
         }).catch((err) => {
             console.log(err);
