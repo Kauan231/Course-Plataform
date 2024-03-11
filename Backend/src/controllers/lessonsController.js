@@ -79,7 +79,7 @@ class lessonController extends Controller {
             const foundCourse = await Models['Course'].findOne({ where: { id: req.params.courseid} });
 
             if(foundLessons.length > 0){
-                return res.status(201).json({
+                return res.status(200).json({
                     status: 'success',
                     message: 'found',
                     data: {...foundLessons },

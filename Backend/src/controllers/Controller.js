@@ -102,7 +102,7 @@ class Controller {
             const foundItem = await Models[this.model].findAll();
             
             if(foundItem.length > 0){
-                return res.status(201).json({
+                return res.status(200).json({
                     status: 'success',
                     message: 'found',
                     data: {...foundItem },

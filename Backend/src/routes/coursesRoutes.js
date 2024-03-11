@@ -10,5 +10,4 @@ router.get('/courses/:id', (req, res) => { coursesController.ReadById(req, res);
 router.delete('/courses/:id', (req, res) => { coursesController.Delete(req, res); });
 router.post('/courses', (req, res) => { coursesController.Create(req, res); });
 
-
 module.exports = router;

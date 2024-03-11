@@ -12,11 +12,11 @@ const ReadByTitleSchema = joi.object().keys({
 });
 
 const ReadByIdSchema = joi.object().keys({
-    id: joi.string().required()
+    id: joi.number().integer().options({ convert: true }).required()
 });
 
 const DeleteSchema = joi.object().keys({
-    id: joi.string().required()
+    id: joi.number().integer().options({ convert: true }).required()
 });
 
 class coursesController extends Controller {

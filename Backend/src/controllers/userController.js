@@ -124,7 +124,7 @@ class userController {
           expiresIn: '5 days',
         });
 
-        return res.status(201).json({
+        return res.status(200).json({
           status: 'success',
           message: 'login successful',
           data: { id: user.dataValues.id },
@@ -147,11 +147,44 @@ class userController {
     }
   }
 
-  Logout(req, res) {
-    return res.json({
-      auth: false,
-      token: null,
-    });
+ 
+
+  async Validate(data, schema) {
+      await schema.validateAsync(data);
   }
+
+  async Delete(req, res) {
+    const DeleteSchema = joi.object().keys({
+        id: joi.number().integer().options({ convert: true }).required()
+    });
+    try {
+        await DeleteSchema.validateAsync(req.params);
+    } catch (err) {
+        return res.status(400).json(
+            { ...err.details }[0].message.split('"').join(''),
+        );
+    }
+
+    try {
+        const deletedItem = await Models.User.destroy({ where: { id: req.params.id } });
+        
+        if(deletedItem){
+            return res.status(204).json({
+                status: 'success',
+                message: 'Resource removed',
+            });
+        }
+        
+        return res.status(404).json({
+            status: 'error',
+            message: 'resource not found'
+        });
+    } catch (err) {
+        console.log(err); 
+        res.status(500).json({
+            ...err,
+        });
+    }
+}
 }
 module.exports = userController;
