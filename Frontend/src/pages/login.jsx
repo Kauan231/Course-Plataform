@@ -29,7 +29,7 @@ const Login = () => {
         }).then(
             (res) => {
                 console.log(res);
-                if(res.status == "201") {
+                if(res.status == "200") {
                     console.log("sucess");
                     document.cookie = "token=" + res.data.token;
                     document.cookie = "userid=" + res.data.data.id;
