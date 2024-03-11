@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactPlayer from 'react-player'
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import Loading from '../components/Loading';
 
@@ -18,11 +18,14 @@ const Lessons = () => {
         "createdAt": null,
         "updatedAt": null,
     });
+
+    const navigate = useNavigate();
+
     
     useEffect(() => {
         Axios.get(`${import.meta.env.VITE_API_ADDRESS}/courses/${courseid}/lessons`).then((res) => {
             SetLessons(Object.values(res.data.data));
-            SetCourseName(Object.values(res.data.coursename));
+            SetCourseName(res.data.coursename);
         }).catch((err) => { 
             console.log(err);
         }).finally(() => {
@@ -44,11 +47,14 @@ const Lessons = () => {
         }
     }, [lessons])
 
+
     function Card ({lesson}) {
         return (
             <button onClick={ () => {
-                localStorage.setItem(`course:${courseid}`,`${lesson.id}`); 
-                SetCurrentVideo(lesson.video); }}>
+                SetCurrentVideo(lesson.video);
+                localStorage.setItem(`course:${courseid}`,`${lesson.id}`);
+                navigate(0); 
+                }}>
                 <div className={`${currentVideo == lesson ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl`}>
                     <h1 className='text-lg font-medium text-white'>
                         {lesson.title}
@@ -68,7 +74,7 @@ const Lessons = () => {
             </div> 
         )
     }
-
+    /*
    if(lessons.length < 1) {
         return (
             <div className='h-screen w-auto bg-slate-200'>
@@ -78,13 +84,14 @@ const Lessons = () => {
             </div>
         )
     }
-
+    */
     localStorage.setItem(`latestcourse`,`${CourseName}`);
-
+    localStorage.setItem(`latestcourseid`,`${courseid}`);
+    
     return (
         <div className='h-screen w-auto bg-slate-200'>
             <div className='w-full grid grid-cols-4 '>
-                <div className="bg-slate-800 h-screen  col-span-1">
+                <div className="bg-slate-800 h-[100vh] overflow-scroll overflow-x-hidden col-span-1">
                     <h1 className='text-4xl font-bold bg-slate-900 text-white p-2 text-center'>
                         { isLoading ? <Loading />  : CourseName}
                     </h1>
