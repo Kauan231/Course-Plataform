@@ -113,7 +113,7 @@ const Lessons = () => {
                     
                 </div>
                 <div className="w-full h-full col-span-3 p-5 bg-black">
-                    { isLoading ? <Loading /> : <ReactPlayer url={currentVideo.video} className="w-1/2 h-full" width='100%'height='100%' /> }
+                    { isLoading ? <Loading /> : <ReactPlayer url={currentVideo.video} className="w-1/2 h-full" width='100%'height='100%' controls/> }
                 </div>
             </div>
         </div>
