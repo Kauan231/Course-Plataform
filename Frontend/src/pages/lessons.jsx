@@ -53,6 +53,7 @@ const Lessons = () => {
             <button onClick={ () => {
                 SetCurrentVideo(lesson.video);
                 localStorage.setItem(`course:${courseid}`,`${lesson.id}`);
+                localStorage.setItem(`courseprogress:${courseid}`,`${lesson.title}`);
                 navigate(0); 
                 }}>
                 <div className={`${currentVideo == lesson ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl`}>

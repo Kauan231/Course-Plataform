@@ -12,7 +12,7 @@ function Card ({course}) {
                     {course.title}
                 </h1>
                 <h1 className='text-lg font-light text-white pt-2'>
-                    Current Lesson
+                    Current Lesson: {localStorage.getItem(`courseprogress:${course.id}`)}
                 </h1>
             </div>
         </Link>

@@ -7,55 +7,25 @@ import {EnrolledContext} from '../context/EnrolledContext'
 
 import { Link } from "react-router-dom";
 
-function Card ({Course}) {
+function Card ({course}) {
     return (
-        <Link to={`/courses/${Course.id}`}>
+        <Link to={`/courses/${course.id}`}>
             <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl'>
                 <h1 className='text-lg font-medium text-white'>
-                    {Course.title}
+                    {course.title}
                 </h1>
                 <h1 className='text-lg font-light text-white pt-2'>
-                    Current Lesson
+                    Current Lesson: {localStorage.getItem(`courseprogress:${course.id}`)}
                 </h1>
             </div>
         </Link>
     )
 }
-
-function AllCoursesCard({Course}) {
-    return (
-        <Link to={`/courses/${Course.id}`}>
-            <div className='bg-blue-600 w-12 h-12 rounded-2xl'>
-                <h1 className='text-lg font-medium text-white'>
-                    {Course.title}
-                </h1>
-            </div>
-        </Link>
-    )
-} 
 
 function EnrolledCourses ({courses})  {
     return courses.map( (course) => {
-       return <Card Course={course} key={course.id} />
+       return <Card course={course} key={course.id}/>
    })
-}
-
-function AllCourses ({courses})  {
-     const coursesCards = courses.map( (course) => {
-        return <Card Course={course} key={course.id} />
-    })
-
-    return (
-        <>
-        <div className='w-full grid justify-center'>
-            <h1 className='text-2xl font-semibold'>All Courses</h1>
-        </div>
-        
-        <div className='h-auto w-full grid grid-cols-3 p-10 gap-12 bg-slate-200'>
-            {coursesCards}
-        </div>
-        </>
-    )
 }
 
 
@@ -84,7 +54,7 @@ const Dashboard = () => {
     
     return (
             <div className='h-screen w-auto bg-slate-200'>
-                <div className='w-full h-auto grid grid-cols-2 p-20'>
+                <div className='w-full h-auto md:grid md:grid-cols-2 md:p-20 flex flex-wrap p-10'>
                     <div className="w-full h-auto p-5">
                         <h1 className='text-2xl font-bold text-slate-500'>
                             Enrolled Courses
@@ -94,18 +64,21 @@ const Dashboard = () => {
                     <div className=' w-full h-fit border-2 border-black/70 p-5 bg-white'>
                         
                         {isLoading ? <Loading /> :
-                        <div className='w-full h-full bg-white flex flex-wrap justify-center '>
+                        <div className='w-auto h-full bg-white flex flex-wrap justify-center'>
                             <h1 className='text-2xl font-bold w-full'> Access your lastest course: </h1>
-                            <Link to={`/courses/${storedCourseId}`} className='p-2 rounded-xl text-xl w-auto mt-12 bg-slate-300 border-2 border-black/40 items-center justify-center flex'>
-                                <h1 className='text-2xl font-semibold'>{storedCourse}</h1>
-                            </Link>
+                            {
+                                storedCourse && 
+                                <Link to={`/courses/${storedCourseId}`} className='p-2 rounded-xl text-xl w-auto mt-6 bg-slate-300 border-2 border-black/40 items-center justify-center flex flex-wrap flex-1'>
+                                    <h1 className='text-xl font-bold w-full'>{storedCourse}</h1>
+                                    <h2 className='text-xl font-semibold w-full'>{localStorage.getItem(`courseprogress:${storedCourseId}`)}</h2>
+                                </Link>
+                            }
                             
                         </div>
                         
                         }
                     </div>
                 </div>
-                <AllCourses courses={allCourses}/>
             </div>
     )
 }

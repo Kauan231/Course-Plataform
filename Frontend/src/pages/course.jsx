@@ -37,9 +37,10 @@ const Course = () => {
         return (
             <button onClick={() => {
                 localStorage.setItem(`course:${courseid}`,`${lesson.id}`);
+                localStorage.setItem(`courseprogress:${courseid}`,`${lesson.title}`);
                 navigate(`lessons`);
             }}>
-                <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl'>
+                <div className={`${localStorage.getItem(`course:${courseid}`) == lesson.id ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl`}>
                     <h1 className='text-lg font-medium text-white'>
                         {lesson.title}
                     </h1>
@@ -74,7 +75,7 @@ const Course = () => {
     }
 
     function UnenrollReq() {
-        Axios.delete(`${import.meta.env.VITE_API_ADDRESS}/${userId}/enroll/${courseid}`, {
+        Axios.delete(`${import.meta.env.VITE_API_ADDRESS}/user/${userId}/enroll/${courseid}`, {
             headers: {
                 'authorization' : userToken
             }
