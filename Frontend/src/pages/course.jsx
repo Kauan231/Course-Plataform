@@ -130,11 +130,28 @@ const Course = () => {
    if(lessons.length < 1) {
         return (
             <div className='h-screen w-auto bg-slate-200'>
-                <div className="w-full h-auto p-5 grid justify-center items-center">    
-                    <h1 className="text-3xl font-bold text-slate-500 "> This course doesn't have any lessons yet </h1>
+                <div className='w-full grid'>
+                    <div className="bg-slate-800 h-screen">
+                        <div className='bg-slate-700 h-auto w-full'>
+                            <div>
+                               <Loading />
+                            </div>
+                            <h2>
+                                <Loading />
+                            </h2>
+                            
+                            <Loading />
+                            
+                        </div>
+                        
+                        <div>
+                            <Loading />
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
-        )
+            )
     }
     
     localStorage.setItem(`latestcourse`,`${CourseName}`);
