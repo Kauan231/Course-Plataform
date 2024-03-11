@@ -50,7 +50,7 @@ const Course = () => {
     
     function ShowLessons ({lessons})  {
         return (
-            <div className="w-full h-auto grid justify-items-center pt-12">
+            <div className="w-full h-auto grid justify-items-center pt-12 bg-slate-800 p-10">
                 <div className='w-1/2 h-auto grid'>
                     <h1 className='text-2xl font-bold text-slate-500'>
                         Lessons
