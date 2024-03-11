@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 function Card ({course}) {
     return (
         <Link to={`/courses/${course.id}/lessons`}>
-            <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl'>
+            <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl hover:scale-[102%] transform transition duration-100'>
                 <h1 className='text-lg font-medium text-white'>
                     {course.title}
                 </h1>

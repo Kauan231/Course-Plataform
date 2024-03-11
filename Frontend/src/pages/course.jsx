@@ -40,7 +40,7 @@ const Course = () => {
                 localStorage.setItem(`courseprogress:${courseid}`,`${lesson.title}`);
                 navigate(`lessons`);
             }}>
-                <div className={`${localStorage.getItem(`course:${courseid}`) == lesson.id ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl`}>
+                <div className={`${localStorage.getItem(`course:${courseid}`) == lesson.id ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl hover:scale-[102%] transform transition duration-100`}>
                     <h1 className='text-lg font-medium text-white'>
                         {lesson.title}
                     </h1>
@@ -106,14 +106,14 @@ const Course = () => {
     function Unenroll(){
         console.log(userToken);
         return (
-        <button className="w-1/6 mt-2 ml-24 mb-2 p-2 rounded-xl bg-white text-lg font-bold" onClick={UnenrollReq}>
+        <button className="w-1/6 mt-2 ml-24 mb-2 p-2 rounded-xl bg-white text-lg font-bold hover:translate-y-1 transform transition duration-100" onClick={UnenrollReq}>
                 Unenroll
         </button >
         )
     }
     function Enroll(){
         return (
-        <button className="w-1/6 mt-2 ml-24 mb-2 p-2 rounded-xl bg-white text-lg font-bold" onClick={EnrollReq}>
+        <button className="w-1/6 mt-2 ml-24 mb-2 p-2 rounded-xl bg-white text-lg font-bold hover:translate-y-1 transform transition duration-100`" onClick={EnrollReq}>
                 Enroll
         </button >
         )

@@ -56,7 +56,7 @@ const Lessons = () => {
                 localStorage.setItem(`courseprogress:${courseid}`,`${lesson.title}`);
                 navigate(0); 
                 }}>
-                <div className={`${currentVideo == lesson ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl`}>
+                <div className={`${currentVideo == lesson ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl hover:scale-[102%] transform transition duration-100`}>
                     <h1 className='text-lg font-medium text-white'>
                         {lesson.title}
                     </h1>

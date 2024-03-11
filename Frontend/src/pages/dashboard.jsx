@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 function Card ({course}) {
     return (
         <Link to={`/courses/${course.id}`}>
-            <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl'>
+            <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl hover:scale-[102%] transform transition duration-100'>
                 <h1 className='text-lg font-medium text-white'>
                     {course.title}
                 </h1>
@@ -64,11 +64,11 @@ const Dashboard = () => {
                     <div className=' w-full h-fit border-2 border-black/70 p-5 bg-white'>
                         
                         {isLoading ? <Loading /> :
-                        <div className='w-auto h-full bg-white flex flex-wrap justify-center'>
+                        <div className='w-auto h-full bg-white flex flex-wrap justify-center '>
                             <h1 className='text-2xl font-bold w-full'> Access your lastest course: </h1>
                             {
                                 storedCourse && 
-                                <Link to={`/courses/${storedCourseId}`} className='p-2 rounded-xl text-xl w-auto mt-6 bg-slate-300 border-2 border-black/40 items-center justify-center flex flex-wrap flex-1'>
+                                <Link to={`/courses/${storedCourseId}`} className='hover:scale-[102%] transform transition duration-100 p-2 rounded-xl text-xl w-auto mt-6 bg-slate-300 border-2 border-black/40 items-center justify-center flex flex-wrap flex-1'>
                                     <h1 className='text-xl font-bold w-full'>{storedCourse}</h1>
                                     <h2 className='text-xl font-semibold w-full'>{localStorage.getItem(`courseprogress:${storedCourseId}`)}</h2>
                                 </Link>

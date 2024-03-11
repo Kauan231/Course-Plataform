@@ -32,7 +32,7 @@ const Header = () => {
 
         if(hidden) { 
             return (
-                <FaSearch className="text-white text-2xl font-bold"  onClick={() => {
+                <FaSearch className="text-white text-2xl font-bold hover:scale-110 transform transition duration-100"  onClick={() => {
                     SetHidden(false);
                 }}> Search </FaSearch>
             )
@@ -62,7 +62,7 @@ const Header = () => {
             <header>
                 <nav className="Navbar">
                     <div className="h-full flex justify-start items-center pl-8">
-                        <Link to="/" className="text-white text-2xl font-bold "> Course.io </Link>
+                        <Link to="/" className="text-white text-2xl font-bold hover:scale-110 transform transition duration-100 "> Course.io </Link>
                     </div>
 
                     <div className="h-full flex justify-center items-center pl-5 gap-12">
@@ -89,7 +89,7 @@ const Header = () => {
                     <ul className={`${ShowNav ?  "grid" : "hidden"} Navbar-Mobile-Links`}>
                         <li><Link to="/courses" className="Navbar-Mobile-Link">All Courses</Link></li>
                         <li><Link to="/courses" className="Navbar-Mobile-Link">Dashboard</Link></li>
-                        <ImExit className="sm:h-8 h-6 mt-2 w-full text-white" onClick={() => {
+                        <ImExit className="sm:h-8 h-6 mt-2 w-full text-white hover:scale-110 transform transition duration-100" onClick={() => {
                             document.cookie = `token=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
                             document.cookie = `userid=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
                             SetLogged(false);
