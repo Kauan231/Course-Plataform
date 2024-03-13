@@ -1,0 +1,27 @@
+.Card {
+    @apply w-[80vw] mt-5 p-2 rounded-2xl hover:scale-[102%] transform transition duration-100;
+}
+.Card_Title {
+    @apply text-lg font-medium text-white;
+}
+.TopSection {
+    @apply bg-slate-700 pb-6 w-full flex flex-wrap gap-[100%]  justify-center sm:justify-start sm:pl-[10vw];
+}
+.TopSection_Title {
+    @apply sm:text-5xl text-2xl font-bold text-white sm:pt-12 pt-6 ;
+}
+.TopSection_Subtitle {
+    @apply text-lg font-bold text-white sm:pt-12 pt-6 pb-6;
+}
+
+.EnrollButton {
+    @apply sm:w-[20vw] w-24 flex flex-wrap justify-center mt-2 p-2 rounded-xl bg-white text-lg font-bold hover:translate-y-1 transform transition duration-100;
+}
+
+.Lessons {
+    @apply w-full h-auto grid justify-items-center pt-12 bg-slate-800 sm:p-10 p-5 ;
+}
+
+.LessonsTitle {
+    @apply text-2xl font-bold text-slate-500;
+}

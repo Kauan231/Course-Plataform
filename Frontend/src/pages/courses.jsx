@@ -1,17 +1,17 @@
-
 import { useState, useEffect } from 'react';
 import Axios from 'axios';
 import Loading from '../components/Loading';
 import { Link } from 'react-router-dom';
+import style from '../style/courses.module.css';
 
 function Card ({course}) {
     return (
         <Link to={`/courses/${course.id}/lessons`}>
-            <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl hover:scale-[102%] transform transition duration-100'>
-                <h1 className='text-lg font-medium text-white'>
+            <div className={style.Card}>
+                <h1 className={style.Card_Title}>
                     {course.title}
                 </h1>
-                <h1 className='text-lg font-light text-white pt-2'>
+                <h1 className={style.Card_Subtitle}>
                     Current Lesson: {localStorage.getItem(`courseprogress:${course.id}`)}
                 </h1>
             </div>
@@ -38,14 +38,12 @@ const Courses = () => {
     }, [])
 
     return (
-        <div className='h-screen w-auto bg-slate-200'>
-            <div className='w-full grid grid-cols-1 lg:p-20 p-5'>
-                <div className="w-full h-auto p-5">
-                    <h1 className='text-2xl font-bold text-slate-500'>
+        <div className='h-screen bg-slate-200'>
+            <div className={style.Card_Grid}>
+                    <h1 className={style.Title}>
                         All Courses
                     </h1>
                     { isLoading ? <Loading />  : <AllCourses courses={courses} />}
-                </div>
             </div>
         </div>
     )   

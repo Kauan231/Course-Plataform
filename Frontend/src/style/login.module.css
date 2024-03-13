@@ -1,0 +1,47 @@
+.Error {
+    @apply text-gray-300 pt-2 font-semibold;
+}
+
+.Form {
+    @apply bg-slate-900 w-full min-h-screen grid-cols-2 grid;
+}
+
+.InputContainer {
+    @apply p-20 w-full flex justify-center items-center;
+}
+
+.FormBackground {
+    @apply p-20 w-full h-auto rounded-md bg-gradient-to-t from-slate-900 to-blue-400 grid;
+}
+
+.AlreadyRegistered {
+    @apply text-2xl font-semibold flex justify-center items-center text-white;
+}
+
+.Label {
+    @apply text-xl flex justify-start text-white;
+}
+.Input {
+    @apply bg-slate-800 w-full p-2 round rounded-md flex justify-center items-center text-white;
+}
+.Submit  {
+    @apply w-full mt-10 p-3 rounded-3xl bg-white text-lg font-bold  hover:border-blue-900/50 border-4;
+}
+.BottomButton {
+    @apply text-white flex mt-5 justify-center items-center;
+}
+
+.CheckOurCourses {
+    @apply text-white text-3xl w-full justify-center items-center;
+}
+
+.CardBackground {
+    @apply bg-slate-800 w-52 mb-auto h-52 border-2 border-slate-700;
+}
+
+.CardText {
+    @apply text-white flex pt-2 justify-center items-center text-lg;
+}
+.CardGrid {
+    @apply flex w-full gap-3 pt-5 pb-5;
+}

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import Loading from '../components/Loading';
+import style from '../style/lessons.module.css';
 
 const Lessons = () => {
     const { courseid } = useParams();
@@ -21,7 +22,6 @@ const Lessons = () => {
 
     const navigate = useNavigate();
 
-    
     useEffect(() => {
         Axios.get(`${import.meta.env.VITE_API_ADDRESS}/courses/${courseid}/lessons`).then((res) => {
             SetLessons(Object.values(res.data.data));
@@ -56,8 +56,8 @@ const Lessons = () => {
                 localStorage.setItem(`courseprogress:${courseid}`,`${lesson.title}`);
                 navigate(0); 
                 }}>
-                <div className={`${currentVideo == lesson ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl hover:scale-[102%] transform transition duration-100`}>
-                    <h1 className='text-lg font-medium text-white'>
+                <div className={`${currentVideo == lesson ? "bg-slate-400" : "bg-slate-600"} ${style.Card}`}>
+                    <h1 className={style.Card_Title}>
                         {lesson.title}
                     </h1>
                 </div>
@@ -67,8 +67,8 @@ const Lessons = () => {
     
     function ShowLessons ({lessons})  {
         return (
-            <div className="w-full h-auto p-5 grid">
-                <h1 className='text-2xl font-bold text-slate-500'>
+            <div className="p-5">
+                <h1 className={style.Lessons_Header}>
                     Lessons
                 </h1>
                 { lessons.map( (lesson) => { return <Card lesson={lesson} key={lesson.id} /> } ) }
@@ -76,45 +76,22 @@ const Lessons = () => {
         )
     }
     
-   if(lessons.length < 1) {
-        return (
-            <div className='h-screen w-auto bg-slate-200'>
-            <div className='w-full grid grid-cols-4 '>
-                <div className="bg-slate-800 h-[100vh] overflow-scroll overflow-x-hidden col-span-1">
-                    <h1 className='text-4xl font-bold bg-slate-900 text-white p-2 text-center'>
-                        <Loading /> 
-                    </h1>
-                    <div>
-                       <Loading />
-                    </div>
-                    
-                </div>
-                <div className="w-full h-full col-span-3 p-5 bg-black">
-                    <Loading />
-                </div>
-            </div>
-        </div>
-        )
-    }
-    
     localStorage.setItem(`latestcourse`,`${CourseName}`);
     localStorage.setItem(`latestcourseid`,`${courseid}`);
     
     return (
-        <div className='h-screen w-auto bg-slate-200'>
-            <div className='w-full grid grid-cols-4 '>
-                <div className="bg-slate-800 h-[100vh] overflow-scroll overflow-x-hidden col-span-1">
-                    <h1 className='text-4xl font-bold bg-slate-900 text-white p-2 text-center'>
-                        { isLoading ? <Loading />  : CourseName}
-                    </h1>
-                    <div>
-                        { isLoading ? <Loading /> : <ShowLessons lessons={lessons} courseid={courseid}/>}
-                    </div>
-                    
+        <div className={style.Lessons_Grid}>
+            <div className={style.Card_List}>
+                <h1 className={style.Course_Title}>
+                    { (isLoading || lessons.length < 1)  ? <Loading />  : CourseName}
+                </h1>
+                <div>
+                    { (isLoading || lessons.length < 1)  ? <Loading /> : <ShowLessons lessons={lessons} courseid={courseid}/>}
                 </div>
-                <div className="w-full h-full col-span-3 p-5 bg-black">
-                    { isLoading ? <Loading /> : <ReactPlayer url={currentVideo.video} className="w-1/2 h-full" width='100%'height='100%' controls/> }
-                </div>
+                
+            </div>
+            <div className={style.Video_Background}>
+                { (isLoading || lessons.length < 1)  ? <Loading /> : <ReactPlayer url={currentVideo.video}  width='100%' height='100%' controls/> }
             </div>
         </div>
     )

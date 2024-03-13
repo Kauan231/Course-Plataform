@@ -1,0 +1,57 @@
+
+.Navbar {
+    @apply items-center lg:grid lg:grid-cols-3 hidden h-20 w-full bg-blue-900;
+}
+
+.NavbarMobile {
+    @apply justify-items-center grid lg:hidden  bg-blue-900;
+}
+
+.ShowMoreMobileIcon {
+    @apply text-white h-auto w-8 mb-6;
+}
+
+.SearchIcon {
+    @apply text-white text-2xl font-bold hover:scale-110 transform transition duration-100 w-full m-5;
+}
+
+.SearchBar {
+    @apply flex items-center;
+}
+.SearchInput {
+    @apply w-10/12 p-2 m-5 rounded-2xl ;
+}
+.SearchClose {
+    @apply -ml-1.5 h-12 w-auto text-white;
+}
+.SearchBarContainer {
+    @apply h-full flex justify-center items-center pl-5 gap-12;
+}
+
+.NavbarLogo {
+    @apply h-full flex justify-start items-center pl-8;
+}
+.NavbarLogoText {
+    @apply text-white text-2xl font-bold hover:scale-110 transform transition duration-100 ;
+}
+.NavbarGrid {
+    @apply h-full flex justify-end items-center pr-5 gap-12;
+}
+.NavbarLink {
+    @apply text-white text-xl font-bold hover:scale-110 transform transition duration-100;
+}
+.Navbar-Links {
+    @apply flex lg:w-auto lg:space-x-36 lg:visible;
+}
+.NavbarMobileLink {
+    @apply text-center font-medium m-5 flex text-white text-sm;
+}
+.NavbarMobileLinks {
+    @apply w-[100vw] m-auto grid-rows-5 justify-center gap-[100%];
+}
+.Exit {
+    @apply h-8 w-auto text-white;
+}
+.ExitMobile {
+    @apply sm:h-8 h-6 mt-2  m-5 w-full text-white hover:scale-110 transform transition duration-100;
+}

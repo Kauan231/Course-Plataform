@@ -1,20 +1,18 @@
-import Loading from '../components/Loading'
-
 import { useContext, useEffect, useState } from 'react';
 import  Axios from 'axios';
-
-import {EnrolledContext} from '../context/EnrolledContext'
-
 import { Link } from "react-router-dom";
+import {EnrolledContext} from '../context/EnrolledContext';
+import Loading from '../components/Loading';
+import style from '../style/dashboard.module.css';
 
 function Card ({course}) {
     return (
         <Link to={`/courses/${course.id}`}>
-            <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl hover:scale-[102%] transform transition duration-100'>
-                <h1 className='text-lg font-medium text-white'>
+            <div className={style.Card}>
+                <h1 className={style.Card_Title}>
                     {course.title}
                 </h1>
-                <h1 className='text-lg font-light text-white pt-2'>
+                <h1 className={style.Card_Subtitle}>
                     Current Lesson: {localStorage.getItem(`courseprogress:${course.id}`)}
                 </h1>
             </div>
@@ -50,27 +48,25 @@ const Dashboard = () => {
 
     var storedCourse = localStorage.getItem(`latestcourse`);
     var storedCourseId = localStorage.getItem(`latestcourseid`);
-    
-    
+
     return (
-            <div className='h-screen w-auto bg-slate-200'>
-                <div className='w-full h-auto md:grid md:grid-cols-2 md:p-20 flex flex-wrap p-10'>
-                    <div className="w-full h-auto p-5">
-                        <h1 className='text-2xl font-bold text-slate-500'>
+            <div className={style.Background}>
+                <div className={style.Dashboard_Container}>
+                    <div className={style.EnrolledCourses}>
+                        <h1 className={style.EnrolledCourses_Title}>
                             Enrolled Courses
                         </h1>
                         {isLoading ? <Loading /> : <EnrolledCourses courses={enrolledCourses} />}
                     </div>
-                    <div className=' w-full h-fit border-2 border-black/70 p-5 bg-white'>
-                        
+                    <div className={style.LatestCourse}>
                         {isLoading ? <Loading /> :
-                        <div className='w-auto h-full bg-white flex flex-wrap justify-center '>
-                            <h1 className='text-2xl font-bold w-full'> Access your lastest course: </h1>
+                        <div>
+                            <h1 className={style.LatestCourse_Header}> Access your lastest course: </h1>
                             {
                                 storedCourse && 
-                                <Link to={`/courses/${storedCourseId}`} className='hover:scale-[102%] transform transition duration-100 p-2 rounded-xl text-xl w-auto mt-6 bg-slate-300 border-2 border-black/40 items-center justify-center flex flex-wrap flex-1'>
-                                    <h1 className='text-xl font-bold w-full'>{storedCourse}</h1>
-                                    <h2 className='text-xl font-semibold w-full'>{localStorage.getItem(`courseprogress:${storedCourseId}`)}</h2>
+                                <Link to={`/courses/${storedCourseId}`} className={style.LatestCourse_Button}>
+                                    <h1 className={style.LatestCourse_Title}>{storedCourse}</h1>
+                                    <h2 className={style.LatestCourse_Subtitle}>{localStorage.getItem(`courseprogress:${storedCourseId}`)}</h2>
                                 </Link>
                             }
                             

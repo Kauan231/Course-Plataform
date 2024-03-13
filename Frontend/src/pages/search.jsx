@@ -2,32 +2,29 @@ import React from "react";
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Axios from 'axios';
-import Loading from '../components/Loading'
+import Loading from '../components/Loading';
+import style from '../style/search.module.css';
 
 function Card ({course}) {
     return (
         <Link to={`/courses/${course.id}`}>
-            <div className='bg-slate-600 w-full mt-5 p-2 rounded-2xl'>
-                <h1 className='text-lg font-medium text-white'>
+            <div className={style.Card}>
+                <h1 className={style.Card_Title}>
                     {course.title}
-                </h1>
-                <h1 className='text-lg font-light text-white pt-2'>
-                    Current Lesson: {localStorage.getItem(`courseprogress:${course.id}`)}
                 </h1>
             </div>
         </Link>
     )
 }
- 
-function ShowCards ({courses})  {
+
+function AllCourses ({courses})  {
+    const Cards = courses.map( (course) => { return <Card course={course} key={course.id}/> })
     return (
-        <div className="w-full h-auto p-5">    
-            <h1 className='text-2xl font-bold text-slate-500'>
-                    Courses Found
-            </h1>
-            {courses.map( (course) => { return <Card course={course} key={course.id}/> })}
-        </div>
-    );
+        <>
+        <h1 className={style.Courses_Found}> Courses found: </h1>
+        {Cards}
+        </>
+    )
 }
 
 function useQuery() {
@@ -54,24 +51,35 @@ const Search = () => {
             setIsLoading(false);
         })
     }, [])
+
+    useEffect(() => {
+        Axios.get(`${import.meta.env.VITE_API_ADDRESS}/courses/search?title=${title}`).then((res) => {
+            SetFoundCourses(Object.values(res.data.data));
+        }).catch((err) => {
+            console.log(err);
+            SetFoundCourses([]);
+        }).finally(() => {
+            setIsLoading(false);
+        })
+    }, [useLocation().search])
     
     const NotFound = () => {
         return (
-            <div className="w-full h-auto p-5 grid justify-center">    
-                <h1 className="text-3xl font-bold text-slate-500 mb-6"> Course not found </h1>
+            <div className={style.NotFound}>    
+                <h1 className={style.Courses_Found}> Course not found </h1>
                 <Link to="/"> 
-                    <h1 className="w-full h-full bg-black rounded-lg p-2 text-xl font-bold text-white text-center">Return</h1>
+                    <h1 className={style.NotFound_Button}>Return</h1>
                 </Link>
             </div>
         )
     }
 
     return (
-        <div className='h-screen w-auto bg-slate-200'>
-            <div className='w-full grid grid-cols-1 p-20'>  
+        <div className='h-screen bg-slate-200'>
+            <div className={style.Card_Grid}>  
                 {isLoading ? <Loading/> : 
                 (
-                    foundCourses.length > 0 ? <ShowCards courses={foundCourses}/> : <NotFound/> 
+                    foundCourses.length > 0 ? <AllCourses courses={foundCourses}/> : <NotFound/> 
                 )}
             </div>
         </div>

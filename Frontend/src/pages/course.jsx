@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import Loading from '../components/Loading';
 import {EnrolledContext} from '../context/EnrolledContext'
+import style from '../style/course.module.css';
 
 const Course = () => {
     const { courseid } = useParams();
@@ -14,7 +15,7 @@ const Course = () => {
     const navigate = useNavigate();
 
     const {enrolledCourses, setEnrolledCourses} = useContext(EnrolledContext);
-
+    
     var matchid = document.cookie.match(new RegExp('(^| )' + "userid" + '=([^;]+)'));
     var matchtoken = document.cookie.match(new RegExp('(^| )' + "token" + '=([^;]+)'));
     if(!matchid || !matchtoken) return navigate("/login");
@@ -40,8 +41,8 @@ const Course = () => {
                 localStorage.setItem(`courseprogress:${courseid}`,`${lesson.title}`);
                 navigate(`lessons`);
             }}>
-                <div className={`${localStorage.getItem(`course:${courseid}`) == lesson.id ? "bg-slate-400" : "bg-slate-600"} w-full mt-5 p-2 rounded-2xl hover:scale-[102%] transform transition duration-100`}>
-                    <h1 className='text-lg font-medium text-white'>
+                <div className={`${localStorage.getItem(`course:${courseid}`) == lesson.id ? "bg-slate-400" : "bg-slate-600"} ${style.Card}`}>
+                    <h1 className={style.Card_Title}>
                         {lesson.title}
                     </h1>
                 </div>
@@ -51,13 +52,11 @@ const Course = () => {
     
     function ShowLessons ({lessons})  {
         return (
-            <div className="w-full h-auto grid justify-items-center pt-12 bg-slate-800 p-10">
-                <div className='w-1/2 h-auto grid'>
-                    <h1 className='text-2xl font-bold text-slate-500'>
-                        Lessons
-                    </h1>
-                    { lessons.map( (lesson,index) => { return <Card lesson={lesson} key={lesson.id} iterator={index}/> } ) }
-                </div>
+            <div className={style.Lessons}>
+                <h1 className={style.LessonsTitle}>
+                    Lessons
+                </h1>
+                { lessons.map( (lesson,index) => { return <Card lesson={lesson} key={lesson.id} iterator={index}/> } ) }
             </div> 
         )
     }
@@ -104,16 +103,15 @@ const Course = () => {
     }
 
     function Unenroll(){
-        console.log(userToken);
         return (
-        <button className="w-1/6 mt-2 ml-24 mb-2 p-2 rounded-xl bg-white text-lg font-bold hover:translate-y-1 transform transition duration-100" onClick={UnenrollReq}>
+        <button className={style.EnrollButton} onClick={UnenrollReq}>
                 Unenroll
         </button >
         )
     }
     function Enroll(){
         return (
-        <button className="w-1/6 mt-2 ml-24 mb-2 p-2 rounded-xl bg-white text-lg font-bold hover:translate-y-1 transform transition duration-100`" onClick={EnrollReq}>
+        <button className={style.EnrollButton} onClick={EnrollReq}>
                 Enroll
         </button >
         )
@@ -121,67 +119,32 @@ const Course = () => {
 
     function CourseButton(){
         if(isLoading) return;
-        console.log(enrolledCourses);
         if(enrolledCourses.find((element) => element.id == courseid)) {
             return <Unenroll/>
         }
         return <Enroll />
-    }
-
-   if(lessons.length < 1) {
-        return (
-            <div className='h-screen w-auto bg-slate-200'>
-                <div className='w-full grid'>
-                    <div className="bg-slate-800 h-screen">
-                        <div className='bg-slate-700 h-auto w-full'>
-                            <div>
-                               <Loading />
-                            </div>
-                            <h2>
-                                <Loading />
-                            </h2>
-                            
-                            <Loading />
-                            
-                        </div>
-                        
-                        <div>
-                            <Loading />
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-            )
     }
     
     localStorage.setItem(`latestcourse`,`${CourseName}`);
     localStorage.setItem(`latestcourseid`,`${courseid}`);
 
     return (
-        <div className='h-screen w-auto bg-slate-200'>
-            <div className='w-full grid'>
-                <div className="bg-slate-800 h-screen">
-                    <div className='bg-slate-700 h-auto w-full'>
-                        <div>
-                            { isLoading ? <Loading />  : <h1 className='text-5xl font-bold text-white pt-12  pl-24'> { CourseName } </h1>}
-                        </div>
-                        <h2>
-                            { isLoading ? <Loading />  : <h1 className='text-2xl font-bold text-white pt-12  pl-24 pb-6'> { CourseDescription } </h1>}
-                        </h2>
-                        
-                        <CourseButton/>
-                        
-                    </div>
-                    
-                    <div>
-                        { isLoading ? <Loading /> : <ShowLessons lessons={lessons} courseid={courseid}/>}
-                    </div>
-                    
+        <div className="bg-slate-800">
+            <div className={style.TopSection}>
+                <div>
+                    { (isLoading || lessons.length < 1) ? <Loading />  : <h1 className={style.TopSection_Title }> { CourseName } </h1>}
                 </div>
+                <h2>
+                    { (isLoading || lessons.length < 1) ? <Loading />  : <h1 className={style.TopSection_Subtitle }> { CourseDescription } </h1>}
+                </h2>
+                <CourseButton/>
+            </div>
+            
+            <div>
+                { (isLoading || lessons.length < 1) ? <Loading /> : <ShowLessons lessons={lessons} courseid={courseid}/>}
             </div>
         </div>
-    )
+)
 }
 
 export default Course;

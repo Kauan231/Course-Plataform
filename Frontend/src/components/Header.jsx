@@ -11,7 +11,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import {EnrolledContext} from '../context/EnrolledContext'
 
-import '../style/Header.css';
+import style from '../style/header.module.css';
 
 const Header = () => {
     const [hidden, SetHidden] = useState(true)
@@ -32,7 +32,7 @@ const Header = () => {
 
         if(hidden) { 
             return (
-                <FaSearch className="text-white text-2xl font-bold hover:scale-110 transform transition duration-100"  onClick={() => {
+                <FaSearch className={style.SearchIcon}  onClick={() => {
                     SetHidden(false);
                 }}> Search </FaSearch>
             )
@@ -40,19 +40,22 @@ const Header = () => {
 
         return (
             <>
+            <div className={style.SearchBar}>
                 <Formik initialValues={initialValues} 
                         validationSchema={searchSchema}
                         onSubmit={ async (values, {resetForm } ) => {
-                            navigate(`search?title=${values.course}`);
+                            navigate(`/search?title=${values.course}`);
                             resetForm();
+                            SetHidden(true);
                         }} >
                     <Form>
-                        <Field className="w-full p-2 rounded-2xl " name="course" type="text" placeholder="Course name"></Field>
+                        <Field className={style.SearchInput} name="course" type="text" placeholder="Course name"></Field>
                     </Form>
                 </Formik>
-                <IoCloseCircle className="ml-5 h-12 w-auto color-white text-white" onClick={ () => {
+                <IoCloseCircle className={style.SearchClose} onClick={ () => {
                     SetHidden(true)
                 } }>Fechar</IoCloseCircle>
+            </div>
             </>
         )
     }
@@ -60,20 +63,20 @@ const Header = () => {
     return (
         <main>
             <header>
-                <nav className="Navbar">
-                    <div className="h-full flex justify-start items-center pl-8">
-                        <Link to="/" className="text-white text-2xl font-bold hover:scale-110 transform transition duration-100 "> Course.io </Link>
+                <nav className={style.Navbar}>
+                    <div className={style.NavbarLogo}>
+                        <Link to="/" className={style.NavbarLogoText }> Course.io </Link>
                     </div>
 
-                    <div className="h-full flex justify-center items-center pl-5 gap-12">
+                    <div className={style.SearchBarContainer}>
                         <SearchBar/>
                         
                     </div>
 
-                    <div className="h-full flex justify-end items-center pr-5 gap-12">
-                        <Link to="/courses" className="text-white text-xl font-bold hover:scale-110 transform transition duration-100">All Courses</Link>
-                        <Link to="/" className="text-white text-xl font-bold hover:scale-110 transform transition duration-100">Dashboard</Link>
-                        <ImExit className="h-8 w-auto text-white" onClick={() => {
+                    <div className={style.NavbarGrid}>
+                        <Link to="/courses" className={style.NavbarLink}>All Courses</Link>
+                        <Link to="/" className={style.NavbarLink}>Dashboard</Link>
+                        <ImExit className={style.Exit} onClick={() => {
                             document.cookie = `token=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
                             document.cookie = `userid=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
                             SetLogged(false);
@@ -82,14 +85,15 @@ const Header = () => {
                     </div>
                 </nav>
                 
-                <nav className="Navbar-Mobile">
+                <nav className={style.NavbarMobile}>
                     <button onClick={ () => SetShowNav(!ShowNav) }>
-                        <VscThreeBars className='ShowMore-Mobile-Icon'></VscThreeBars>
+                        <VscThreeBars className={style.ShowMoreMobileIcon}></VscThreeBars>
                     </button>
-                    <ul className={`${ShowNav ?  "grid" : "hidden"} Navbar-Mobile-Links`}>
-                        <li><Link to="/courses" className="Navbar-Mobile-Link">All Courses</Link></li>
-                        <li><Link to="/courses" className="Navbar-Mobile-Link">Dashboard</Link></li>
-                        <ImExit className="sm:h-8 h-6 mt-2 w-full text-white hover:scale-110 transform transition duration-100" onClick={() => {
+                    <ul className={`${ShowNav ?  "flex flex-wrap" : "hidden"} ${style.NavbarMobileLinks}`}>
+                        <li><Link to="/courses" className={style.NavbarMobileLink}>All Courses</Link></li>
+                        <li><Link to="/" className={style.NavbarMobileLink}>Dashboard</Link></li>
+                        <SearchBar/>
+                        <ImExit className={style.ExitMobile} onClick={() => {
                             document.cookie = `token=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
                             document.cookie = `userid=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
                             SetLogged(false);
