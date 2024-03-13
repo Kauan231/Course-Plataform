@@ -22,7 +22,7 @@
     @apply text-xl flex justify-start text-white;
 }
 .Input {
-    @apply bg-slate-800 w-full p-2 round rounded-md flex justify-center items-center text-white;
+    @apply bg-slate-800 w-full p-2 rounded-md flex justify-center items-center text-white;
 }
 .Submit  {
     @apply w-full mt-10 p-3 rounded-3xl bg-white text-lg font-bold  hover:border-blue-900/50 border-4;
